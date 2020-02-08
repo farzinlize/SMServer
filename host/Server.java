@@ -58,13 +58,14 @@ public class Server extends Thread{
         log.log(Level.CONFIG, "Request handler started on " + requestHandler.getPort());
     }
 
-    public void onRequest(Socket requestSocket){
+    public void onRequest(Socket requestSocket, int requestedFile){
         if(activeRequest >= MAX_ACTIVE_REQUEST){
             log.log(Level.WARNING, "[Server]["+id+"] maximum number of requests reached");
             //TODO: send back server error to client
             return;
         }
-        Schaduler schaduler = new Schaduler(activeRequest, this, requestSocket);
+        Schaduler schaduler = new Schaduler(activeRequest, this, 
+                    requestSocket, this.tree.getFile(requestedFile));
         schadulers[activeRequest++] = schaduler;
         schaduler.start();
     }

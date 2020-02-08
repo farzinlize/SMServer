@@ -6,4 +6,20 @@ public class Buffer{
         
     }
 
+    public void waitSemaphoreConsume(){
+
+    }
+
+    public void waitSemaphoreProduce(){
+
+    }
+
+    public void putProduced(String data){
+        
+    }
+
+    public String getConsummable(){
+        return "";
+    }
+
 }

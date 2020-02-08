@@ -2,6 +2,7 @@ package host;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -16,10 +17,12 @@ public class Schaduler extends Thread {
     private Agent[] agents;
     private Buffer shared;
     private ResourceManager manager;
+    private File requested;
 
-    public Schaduler(int id, Server server, Socket requestSocket) {
+    public Schaduler(int id, Server server, Socket requestSocket, File requested) {
         this.id = id;
         this.server = server;
+        this.requested = requested;
 
         producers = new Producer[manager.getProducerNumber()];
         shared = new Buffer(manager.getBufferSize());
@@ -30,12 +33,10 @@ public class Schaduler extends Thread {
     @Override
     public void run() {
         for (int i=0;i<agents.length;i++) {
-            Agent newAgent = new Agent();
-            agents[i] = newAgent;
             agents[i].start();
         }
         for (int i=0;i<producers.length;i++) {
-            Producer newProducer = new Producer();
+            Producer newProducer = new Producer(i, this, shared);
             producers[i] = newProducer;
             producers[i].start();
         }
@@ -46,16 +47,26 @@ public class Schaduler extends Thread {
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 
-            //first send back requested agents on client (number of producers on server)
-            output.writeInt(producers.length);
-
             //read requested number of agents for consumers on client in server
             int numberOfAgents = input.readInt();
             agents = new Agent[numberOfAgents];
+
+            //send port numbers for requested agents
+            for (int i=0;i<numberOfAgents;i++) {
+                int port = 2500 + i + id*50;
+                output.writeInt(port);
+                Agent newAgent = new Agent(port, shared);
+                agents[i] = newAgent;
+            }
         } catch (IOException e) {
             server.log.log(Level.WARNING, "[Schaduler] socket failed");
         }
 
+    }
+
+    public String getWork(int producer){
+        //TODO: job distribution
+        return "";
     }
 
 }
