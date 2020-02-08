@@ -1,5 +1,5 @@
 package host;
 
-public class Producer{
+public class Producer extends Thread{
     
 }
