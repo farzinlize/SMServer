@@ -1,5 +1,6 @@
 package host;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -28,7 +29,8 @@ public class RequestHandler implements Runnable{
             try {
                 Socket request = this.requestServerSocket.accept();
                 server.log.log(Level.INFO, "[RequestHandler] connection accepted");
-                server.onRequest(request);
+                DataInputStream input = new DataInputStream(request.getInputStream());
+                server.onRequest(request, input.readInt());
             } catch (IOException e) {
                 server.log.log(Level.INFO, "[RequestHandler] failed on accept");
             }
