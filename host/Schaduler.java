@@ -2,11 +2,12 @@ package host;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.util.logging.Level;
 
+import host.resources.Distributor;
 import host.resources.ResourceManager;
 import host.utils.Partition;
 
@@ -18,17 +19,21 @@ public class Schaduler extends Thread {
     private Agent[] agents;
     private Buffer shared;
     private ResourceManager manager;
-    private File requested;
+    private Distributor distributor;
 
-    public Schaduler(int id, Server server, Socket requestSocket, File requested) {
+    public Schaduler(int id, Server server, Socket requestSocket, Path filePath) throws IOException {
         this.id = id;
         this.server = server;
-        this.requested = requested;
+        //TODO: initial distributor and manager
 
         producers = new Producer[manager.getProducerNumber()];
         shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockNumber());
 
         initalAgents(requestSocket);
+
+        //report client number of blocks
+        DataOutputStream output = new DataOutputStream(requestSocket.getOutputStream());
+        output.writeInt(distributor.blockCount());
     }
 
     @Override
@@ -66,8 +71,7 @@ public class Schaduler extends Thread {
     }
 
     public Partition getWork(int producer){
-        //TODO: job distribution
-        return null;
+        return this.distributor.getPartition();
     }
 
 }

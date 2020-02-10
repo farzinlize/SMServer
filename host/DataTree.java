@@ -1,10 +1,14 @@
 package host;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class DataTree {
 
-    public File getFile(int id){
+    public int getFileSize(int id){
+        return 0;
+    }
+
+    public Path getFilePath(int id){
         return null;
     }
 

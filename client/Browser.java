@@ -41,7 +41,7 @@ public class Browser implements Runnable{
             System.out.println("reachs maximum number of requests");
             return;
         }
-        Request request = new Request(activeRequests, requestTag, input.nextInt());
+        Request request = new Request(activeRequests, requestTag, input.next(), input.nextInt());
         requests[activeRequests++] = request;
         request.start();
     }

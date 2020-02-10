@@ -1,5 +1,6 @@
 package host;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
@@ -61,11 +62,16 @@ public class Server extends Thread{
     public void onRequest(Socket requestSocket, int requestedFile){
         if(activeRequest >= MAX_ACTIVE_REQUEST){
             log.log(Level.WARNING, "[Server]["+id+"] maximum number of requests reached");
-            //TODO: send back server error to client
+            //TODO: send back server busy code to client
             return;
         }
-        Schaduler schaduler = new Schaduler(activeRequest, this, 
-                    requestSocket, this.tree.getFile(requestedFile));
+        Schaduler schaduler;
+        try {
+            schaduler = new Schaduler(activeRequest, this, requestSocket, this.tree.getFilePath(requestedFile));
+        } catch (IOException e) {
+            // TODO: send back server error
+            return ;
+        }
         schadulers[activeRequest++] = schaduler;
         schaduler.start();
     }
