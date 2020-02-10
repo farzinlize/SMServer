@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 
 import host.resources.ResourceManager;
+import host.utils.Partition;
 
 public class Schaduler extends Thread {
 
@@ -25,7 +26,7 @@ public class Schaduler extends Thread {
         this.requested = requested;
 
         producers = new Producer[manager.getProducerNumber()];
-        shared = new Buffer(manager.getBufferSize());
+        shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockNumber());
 
         initalAgents(requestSocket);
     }
@@ -64,9 +65,9 @@ public class Schaduler extends Thread {
 
     }
 
-    public String getWork(int producer){
+    public Partition getWork(int producer){
         //TODO: job distribution
-        return "";
+        return null;
     }
 
 }

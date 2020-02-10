@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import host.utils.Partition;
+
 public class Agent extends Thread {
 
     private Buffer shared;
@@ -39,9 +41,15 @@ public class Agent extends Thread {
     public void jobLoop() throws IOException {
         boolean working = true;
         while(working){
-            shared.waitSemaphoreConsume();
-            String data = shared.getConsummable();
-            output.writeUTF(data);
+            Partition partition;
+			try {
+				partition = shared.getConsummable();
+			} catch (InterruptedException e) {
+                // TODO: Report error
+                return;
+            }
+            output.writeInt(partition.index);
+            output.writeUTF(partition.data);
             working = input.readBoolean();
         }
     }

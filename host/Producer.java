@@ -1,25 +1,31 @@
 package host;
 
-public class Producer extends Thread{
-    
+import host.utils.Partition;
+
+public class Producer extends Thread {
+
     private int id;
     private Buffer shared;
     private Schaduler boss;
 
-    public Producer(int id, Schaduler schaduler, Buffer buffer){
+    public Producer(int id, Schaduler schaduler, Buffer buffer) {
         this.id = id;
         this.boss = schaduler;
         this.shared = buffer;
     }
 
     @Override
-    public void run(){
-        while(true){
-            shared.waitSemaphoreProduce();
-            String data = boss.getWork(id);
-            if(data == null){return;}
-            String encrypted = code(data);
-            shared.putProduced(encrypted);
+    public void run() {
+        while (true) {
+            // shared.waitSemaphoreProduce();
+            Partition partition = boss.getWork(id);
+            if (partition == null) {return;}
+            String encrypted = code(partition.data);
+            try {
+                shared.putProduced(new Partition(partition.index, encrypted));
+            } catch (Exception e) {
+                // TODO: Report error
+            }
         }
     }
 
