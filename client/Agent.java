@@ -19,7 +19,7 @@ public class Agent extends Thread {
         this.master = master;
         this.port = port;
         this.serverIP = ip;
-        this.decoder = new Consumer();
+        //this.decoder = new Consumer();
     }
 
     @Override

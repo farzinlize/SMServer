@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import client.resources.FixedResourceManager;
 import client.resources.ResourceManager;
 
 public class Request extends Thread {
@@ -24,6 +25,8 @@ public class Request extends Thread {
         this.dataTag = requestTag;
         this.serverIP = ip;
         this.requestPort = requestPort;
+
+        this.manager = new FixedResourceManager(5);
 
         agents = new Agent[manager.getConsumerNumber()];
     }
