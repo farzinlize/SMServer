@@ -31,6 +31,7 @@ public class Request extends Thread {
     @Override
     public void run() {
         try {
+            //inital request
             Socket socket = new Socket(serverIP, requestPort);
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
@@ -56,13 +57,14 @@ public class Request extends Thread {
                 agents[i].start();
             }
             
+            //end of conversation
             socket.close();
             
             //wait for agents to finish their job
             this.joinAgents();
 
             //return file to browser as result
-            browser.onRespond(dataTag, collector.getResult());
+            browser.onRespond(id, dataTag, collector.getResult());
         } catch (IOException e) {
             //TODO: report to user
             return ;

@@ -3,16 +3,12 @@ package client;
 public class Collector{
 
     private byte[] result;
-    private int byteCount;
     private int blockSize;
-    private int blockCount;
     private int consumerCount;
     private Integer holes;
 
     public Collector(int byteCount, int blockSize, int blockCount, int consumerCount){
-        this.blockCount = blockCount;
         this.blockSize = blockSize;
-        this.byteCount = byteCount;
         this.holes = blockCount;
         this.consumerCount = consumerCount;
 

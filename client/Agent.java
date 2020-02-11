@@ -31,6 +31,9 @@ public class Agent extends Thread {
 
             //start decoding
             jobLoop();
+
+            //end of process
+            socket.close();
         } catch (IOException e) {
             // TODO: report error
         }

@@ -42,8 +42,14 @@ public class Browser implements Runnable{
             System.out.println("reachs maximum number of requests");
             return;
         }
-        Request request = new Request(this, activeRequests, requestTag, input.next(), input.nextInt());
-        requests[activeRequests++] = request;
+        int slot = 0;
+        while(slot < MAX_ACTIVE_REQUEST){
+            if(requests[slot]==null) break;
+            slot++;
+        }
+        Request request = new Request(this, slot, requestTag, input.next(), input.nextInt());
+        requests[slot] = request;
+        activeRequests++;
         request.start();
     }
 
@@ -51,8 +57,10 @@ public class Browser implements Runnable{
 
     }
 
-    public void onRespond(int dataID, byte[] data){
+    public synchronized void onRespond(int requestIndex, int dataID, byte[] data){
         this.tree.update(dataID, data);
+        requests[requestIndex] = null;
+        activeRequests--;
     }
 
 }
