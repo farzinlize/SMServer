@@ -6,6 +6,7 @@ public class Browser implements Runnable{
 
     public static final int MAX_ACTIVE_REQUEST = 5;
 
+    private DataTree tree;
     private int activeRequests;
     private Request[] requests;
     private Scanner input;
@@ -41,13 +42,17 @@ public class Browser implements Runnable{
             System.out.println("reachs maximum number of requests");
             return;
         }
-        Request request = new Request(activeRequests, requestTag, input.next(), input.nextInt());
+        Request request = new Request(this, activeRequests, requestTag, input.next(), input.nextInt());
         requests[activeRequests++] = request;
         request.start();
     }
 
     private void fetch(){
 
+    }
+
+    public void onRespond(int dataID, byte[] data){
+        this.tree.update(dataID, data);
     }
 
 }

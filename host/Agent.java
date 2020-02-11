@@ -33,8 +33,7 @@ public class Agent extends Thread {
             //start consumming
             jobLoop();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            // TODO: report error
         }
     }
 

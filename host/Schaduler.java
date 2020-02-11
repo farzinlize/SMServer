@@ -29,11 +29,13 @@ public class Schaduler extends Thread {
         producers = new Producer[manager.getProducerNumber()];
         shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockNumber());
 
-        initalAgents(requestSocket);
-
-        //report client number of blocks
+        //report client file info
         DataOutputStream output = new DataOutputStream(requestSocket.getOutputStream());
+        output.writeInt(distributor.fileByteCount());
         output.writeInt(distributor.blockCount());
+        output.writeInt(manager.getBufferBlockSize());
+        
+        initalAgents(requestSocket);
     }
 
     @Override
@@ -56,6 +58,9 @@ public class Schaduler extends Thread {
             //read requested number of agents for consumers on client in server
             int numberOfAgents = input.readInt();
             agents = new Agent[numberOfAgents];
+
+            //send back ip for agents
+            output.writeUTF("localhost");
 
             //send port numbers for requested agents
             for (int i=0;i<numberOfAgents;i++) {
