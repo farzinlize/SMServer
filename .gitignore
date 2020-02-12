@@ -1,0 +1,3 @@
+host/files/*
+client/files/*
+*.log
