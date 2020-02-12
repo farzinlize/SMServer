@@ -1,9 +1,7 @@
 package client;
 
-public class DataTree{
+public interface DataTree{
     
-    public void update(int dataTag, byte[] data){
-        
-    }
+    public void update(int dataTag, byte[] data);
 
 }

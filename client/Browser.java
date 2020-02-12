@@ -15,6 +15,8 @@ public class Browser implements Runnable{
         activeRequests = 0;
         input = new Scanner(System.in);
         requests = new Request[MAX_ACTIVE_REQUEST];
+
+        //TODO: inital data tree
     }
 
     @Override
