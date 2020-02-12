@@ -24,30 +24,44 @@ public class Schaduler extends Thread {
     public Schaduler(int id, Server server, Socket requestSocket, Path filePath) throws IOException {
         this.id = id;
         this.server = server;
-        //TODO: initial distributor and manager
+        // TODO: initial distributor and manager (using filePath for distributer)
 
         producers = new Producer[manager.getProducerNumber()];
         shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockNumber());
 
-        //report client file info
+        // report client file info
         DataOutputStream output = new DataOutputStream(requestSocket.getOutputStream());
         output.writeInt(distributor.fileByteCount());
         output.writeInt(distributor.blockCount());
         output.writeInt(manager.getBufferBlockSize());
-        
+
         initalAgents(requestSocket);
+
+        // end of request conversation
+        requestSocket.close();
     }
 
     @Override
     public void run() {
-        for (int i=0;i<agents.length;i++) {
+        // start threads
+        for (int i = 0; i < agents.length; i++) {
             agents[i].start();
         }
-        for (int i=0;i<producers.length;i++) {
+        for (int i = 0; i < producers.length; i++) {
             Producer newProducer = new Producer(i, this, shared);
             producers[i] = newProducer;
             producers[i].start();
         }
+
+        // wait for child thread
+        try {
+            this.joinChilds();
+        } catch (InterruptedException e) {
+            // TODO: Report error
+        }
+
+        //report to server
+        server.onRequestDone(this.id);
     }
 
     public void initalAgents(Socket socket) {
@@ -77,6 +91,15 @@ public class Schaduler extends Thread {
 
     public Partition getWork(int producer){
         return this.distributor.getPartition();
+    }
+
+    private void joinChilds() throws InterruptedException {
+        for (Agent agent : agents) {
+            agent.join();
+        }
+        for (Producer producer : producers){
+            producer.join();
+        }
     }
 
 }

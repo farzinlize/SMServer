@@ -1,6 +1,5 @@
 package host;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
@@ -65,19 +64,31 @@ public class Server extends Thread{
             //TODO: send back server busy code to client
             return;
         }
+        int slot = 0;
+        while(slot < MAX_ACTIVE_REQUEST){
+            if(schadulers[slot]==null) break;
+            slot++;
+        }
         Schaduler schaduler;
         try {
-            schaduler = new Schaduler(activeRequest, this, requestSocket, this.tree.getFilePath(requestedFile));
+            schaduler = new Schaduler(slot, this, requestSocket, 
+                        this.tree.getFilePath(requestedFile));
         } catch (IOException e) {
             // TODO: send back server error
             return ;
         }
-        schadulers[activeRequest++] = schaduler;
+        schadulers[slot] = schaduler;
+        activeRequest++;
         schaduler.start();
     }
 
     public void onFetch(Socket fetchSocket){
         
+    }
+
+    public void onRequestDone(int requestId){
+        schadulers[requestId] = null;
+        activeRequest--;
     }
 
 }

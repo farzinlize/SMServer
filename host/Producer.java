@@ -20,7 +20,7 @@ public class Producer extends Thread {
             // shared.waitSemaphoreProduce();
             Partition partition = boss.getWork(id);
             if (partition == null) {return;}
-            String encrypted = code(partition.data);
+            byte[] encrypted = code(partition.data);
             try {
                 shared.putProduced(new Partition(partition.index, encrypted));
             } catch (Exception e) {
@@ -29,9 +29,9 @@ public class Producer extends Thread {
         }
     }
 
-    private String code(String data){
+    private byte code(byte[] data){
         //TODO: encription java
-        return data;
+        return null;
     }
 
 }
