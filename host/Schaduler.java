@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import host.resources.Distributor;
 import host.resources.FixedResourceManager;
 import host.resources.ResourceManager;
+import host.resources.StaticDistributor;
 
 public class Schaduler extends Thread {
 
@@ -27,6 +28,8 @@ public class Schaduler extends Thread {
         
         //inital resource manager
         this.manager = new FixedResourceManager(5, 50, 100);
+        this.distributor = new StaticDistributor(filePath, 
+                manager.getProducerCount(), manager.getBufferBlockSize());
 
         producers = new Producer[manager.getProducerCount()];
         shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockCount());

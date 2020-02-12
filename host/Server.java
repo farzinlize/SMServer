@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import host.database.DataTree;
+import host.database.SimpleDataTree;
 
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -31,6 +32,9 @@ public class Server extends Thread{
         this.id = id;
         activeRequest = 0;
         schadulers = new Schaduler[MAX_ACTIVE_REQUEST];
+
+        //start data tree
+        this.tree = new SimpleDataTree();
 
         log = Logger.getLogger("server#"+id);
         log.setLevel(Level.CONFIG);

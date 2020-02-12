@@ -45,6 +45,10 @@ public class Agent extends Thread {
                 // TODO: Report error
                 return;
             }
+            if(partition == null){
+                System.out.println("null here");
+                return;
+            }
             output.writeInt(partition.index);
             output.writeInt(partition.data.length);
             output.write(partition.data);

@@ -3,6 +3,7 @@ package client;
 import java.util.Scanner;
 
 import client.database.DataTree;
+import client.database.SimpleDataTree;
 
 public class Browser implements Runnable{
 
@@ -19,6 +20,7 @@ public class Browser implements Runnable{
         requests = new Request[MAX_ACTIVE_REQUEST];
 
         //TODO: inital data tree
+        this.tree = new SimpleDataTree();
     }
 
     @Override
@@ -30,10 +32,14 @@ public class Browser implements Runnable{
                 break;
             }
             else if(command.equals("request")){
+                System.out.println("fileTag - ip - port (9876)");
                 initialRequest(input.nextInt());
             }
             else if(command.equals("fetch")){
                 fetch();
+            }
+            else if(command.equals("activeCount")){
+                System.out.println(activeRequests);
             }
             else{
                 System.out.println("unknown command: " + command);
