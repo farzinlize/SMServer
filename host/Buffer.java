@@ -16,21 +16,21 @@ public class Buffer{
     private Semaphore consume;
 
     private int blockSize;
-    private int blockNumber;
+    private int blockCount;
 
-    public Buffer(int blockSize, int blockNumber){
-        memory = new byte[blockSize][blockNumber];
-        this.blockNumber = blockNumber;
+    public Buffer(int blockSize, int blockCount){
+        memory = new byte[blockSize][blockCount];
+        this.blockCount = blockCount;
         this.blockSize = blockSize;
 
-        status = new int[blockNumber];
-        blockLocks = new Lock[blockNumber];
-        for(int i=0;i<blockNumber;i++){
+        status = new int[blockCount];
+        blockLocks = new Lock[blockCount];
+        for(int i=0;i<blockCount;i++){
             status[i] = -1;
             blockLocks[i] = new ReentrantLock();
         }
 
-        produce = new Semaphore(blockNumber);
+        produce = new Semaphore(blockCount);
         consume = new Semaphore(0);
     }
 
@@ -38,7 +38,7 @@ public class Buffer{
         produce.acquire();
         if(partition.data.length > blockSize) throw new Exception("data oversized fatal error");
         int current=0;
-        while(current<blockNumber){
+        while(current<blockCount){
             boolean moreTry = true;
             int tryCount = MAX_TRY_COUNT;
             while(moreTry && tryCount > 0){
@@ -69,7 +69,7 @@ public class Buffer{
     public Partition getConsummable() throws InterruptedException {
         consume.acquire();
         int current = 0;
-        while(current<blockNumber){
+        while(current<blockCount){
             boolean moreTry = true;
             int tryCount = MAX_TRY_COUNT;
             while(moreTry && tryCount > 0){

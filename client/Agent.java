@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import client.encryption.NoEncryption;
+
 public class Agent extends Thread {
 
     private Request master;
@@ -19,7 +21,8 @@ public class Agent extends Thread {
         this.master = master;
         this.port = port;
         this.serverIP = ip;
-        //this.decoder = new Consumer();
+        
+        this.decoder = new NoEncryption();
     }
 
     @Override

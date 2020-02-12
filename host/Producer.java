@@ -1,5 +1,7 @@
 package host;
 
+import host.encryption.NoEncryption;
+
 public class Producer extends Thread {
 
     private int id;
@@ -12,7 +14,7 @@ public class Producer extends Thread {
         this.boss = schaduler;
         this.shared = buffer;
 
-        //TODO: inital coder
+        this.coder = new NoEncryption();
     }
 
     @Override

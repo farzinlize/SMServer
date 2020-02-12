@@ -89,7 +89,7 @@ public class Schaduler extends Thread {
     }
 
     public Partition getWork(int producer){
-        return this.distributor.getPartition();
+        return this.distributor.getPartition(producer);
     }
 
     private void joinChilds() throws InterruptedException {
