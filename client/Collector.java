@@ -16,8 +16,10 @@ public class Collector{
     }
 
     public boolean place(int index, byte[] data){
-        for(int i=0;i<blockSize;i++){
+        int i = 0;
+        while(i<blockSize && (i+index*blockSize) < result.length){
             result[i+index*blockSize] = data[i];
+            i++;
         }
         boolean stillWork;
         synchronized(holes){
