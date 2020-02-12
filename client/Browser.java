@@ -2,6 +2,8 @@ package client;
 
 import java.util.Scanner;
 
+import client.database.DataTree;
+
 public class Browser implements Runnable{
 
     public static final int MAX_ACTIVE_REQUEST = 5;

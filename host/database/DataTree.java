@@ -1,4 +1,4 @@
-package host;
+package host.database;
 
 import java.nio.file.Path;
 
