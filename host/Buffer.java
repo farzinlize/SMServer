@@ -5,8 +5,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import host.utils.Partition;
-
 public class Buffer{
     
     public static final int MAX_TRY_COUNT = 5;

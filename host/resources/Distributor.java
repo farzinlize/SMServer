@@ -1,6 +1,6 @@
 package host.resources;
 
-import host.utils.Partition;
+import host.Partition;
 
 public interface Distributor{
 

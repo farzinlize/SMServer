@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import host.utils.Partition;
-
 public class Agent extends Thread {
 
     private Buffer shared;

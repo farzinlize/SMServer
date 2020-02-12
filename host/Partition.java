@@ -1,4 +1,4 @@
-package host.utils;
+package host;
 
 public class Partition{
     

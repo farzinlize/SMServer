@@ -1,7 +1,5 @@
 package host;
 
-import host.utils.Partition;
-
 public class Producer extends Thread {
 
     private int id;
