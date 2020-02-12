@@ -7,11 +7,14 @@ public class Producer extends Thread {
     private int id;
     private Buffer shared;
     private Schaduler boss;
+    private Coder coder;
 
     public Producer(int id, Schaduler schaduler, Buffer buffer) {
         this.id = id;
         this.boss = schaduler;
         this.shared = buffer;
+
+        //TODO: inital coder
     }
 
     @Override
@@ -30,8 +33,7 @@ public class Producer extends Thread {
     }
 
     private byte[] code(byte[] data){
-        //TODO: encription java
-        return null;
+        return this.coder.code(data);
     }
 
 }

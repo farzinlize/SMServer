@@ -1,6 +1,6 @@
 package client;
 
-public interface Consumer{
+public interface Decoder{
  
     public byte[] decode(byte[] encrepted);
 

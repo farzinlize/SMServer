@@ -10,7 +10,7 @@ public class Agent extends Thread {
     private Request master;
     private String serverIP;
     private int port;
-    private Consumer decoder;
+    private Decoder decoder;
 
     private DataInputStream input;
     private DataOutputStream output;
