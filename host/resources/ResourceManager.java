@@ -2,8 +2,8 @@ package host.resources;
 
 public interface ResourceManager{
 
-    public int getProducerNumber();
+    public int getProducerCount();
     public int getBufferBlockSize();
-    public int getBufferBlockNumber();
+    public int getBufferBlockCount();
 
 }

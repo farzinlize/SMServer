@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 
 import host.resources.Distributor;
+import host.resources.FixedResourceManager;
 import host.resources.ResourceManager;
 
 public class Schaduler extends Thread {
@@ -23,10 +24,12 @@ public class Schaduler extends Thread {
     public Schaduler(int id, Server server, Socket requestSocket, Path filePath) throws IOException {
         this.id = id;
         this.server = server;
-        // TODO: initial distributor and manager (using filePath for distributer)
+        
+        //inital resource manager
+        this.manager = new FixedResourceManager(5, 50, 100);
 
-        producers = new Producer[manager.getProducerNumber()];
-        shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockNumber());
+        producers = new Producer[manager.getProducerCount()];
+        shared = new Buffer(manager.getBufferBlockSize(), manager.getBufferBlockCount());
 
         // report client file info
         DataOutputStream output = new DataOutputStream(requestSocket.getOutputStream());
