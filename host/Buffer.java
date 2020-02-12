@@ -1,5 +1,6 @@
 package host;
 
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -10,7 +11,7 @@ public class Buffer{
     
     public static final int MAX_TRY_COUNT = 5;
 
-    private String[] memory;
+    private byte[][] memory;
     private int[] status;
     private Lock[] blockLocks;
     private Semaphore produce;
@@ -20,7 +21,7 @@ public class Buffer{
     private int blockNumber;
 
     public Buffer(int blockSize, int blockNumber){
-        memory = new String[blockNumber];
+        memory = new byte[blockSize][blockNumber];
         this.blockNumber = blockNumber;
         this.blockSize = blockSize;
 
@@ -37,7 +38,7 @@ public class Buffer{
 
     public void putProduced(Partition partition) throws Exception {
         produce.acquire();
-        if(partition.data.length() > blockSize) throw new Exception("data oversized fatal error");
+        if(partition.data.length > blockSize) throw new Exception("data oversized fatal error");
         int current=0;
         while(current<blockNumber){
             boolean moreTry = true;
@@ -52,7 +53,7 @@ public class Buffer{
                     }else{
                         //empty block found
                         status[current] = partition.index;
-                        memory[current] = new String(partition.data);
+                        memory[current] = Arrays.copyOf(partition.data, partition.data.length);
                         consume.release();
                         return; //mission compelete
                     }
@@ -83,7 +84,7 @@ public class Buffer{
                     }else{
                         //full block found
                         Partition partition = new Partition(status[current], 
-                                    new String(memory[current]));
+                                    Arrays.copyOf(memory[current], memory[current].length));
                         status[current] = -1;
                         produce.release();
                         return partition;

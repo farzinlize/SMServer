@@ -29,7 +29,7 @@ public class Producer extends Thread {
         }
     }
 
-    private byte code(byte[] data){
+    private byte[] code(byte[] data){
         //TODO: encription java
         return null;
     }
