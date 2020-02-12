@@ -46,7 +46,8 @@ public class Agent extends Thread {
         boolean stayAlive = true;
         while(stayAlive){
             int index = input.readInt();
-            byte[] data = input.readNBytes(master.getBlockSize());
+            int blockSize = input.readInt();
+            byte[] data = input.readNBytes(blockSize);
             byte[] decrypted = decoder.decode(data);
             stayAlive = master.place(index, decrypted);
             output.writeBoolean(stayAlive);

@@ -46,6 +46,7 @@ public class Agent extends Thread {
                 return;
             }
             output.writeInt(partition.index);
+            output.writeInt(partition.data.length);
             output.write(partition.data);
             working = input.readBoolean();
         }

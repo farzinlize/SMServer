@@ -19,7 +19,7 @@ public class Buffer{
     private int blockCount;
 
     public Buffer(int blockSize, int blockCount){
-        memory = new byte[blockSize][blockCount];
+        memory = new byte[blockCount][];
         this.blockCount = blockCount;
         this.blockSize = blockSize;
 
