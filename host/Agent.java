@@ -5,31 +5,50 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
+
+import fuzzy.Utilz;
 
 public class Agent extends Thread {
 
+    private Logger log;
     private Buffer shared;
 
     private int port;
     private DataInputStream input;
     private DataOutputStream output;
 
-    public Agent(int port, Buffer buffer) {
+    public Agent(int id, int port, Buffer buffer) {
         this.port = port;
         this.shared = buffer;
+
+        try {
+            log = Utilz.initialLogger("agent-host-" + id);
+        } catch (SecurityException | IOException e) {
+            System.out.println("error creating or opening agent-host log file");
+        }
+        Utilz.logIt(log, "Agent-host created");
     }
 
     @Override
     public void run() {
+        Utilz.logIt(log, "Agent-host start running");
         try {
             ServerSocket terminal = new ServerSocket(port);
             Socket connection = terminal.accept();
             input = new DataInputStream(connection.getInputStream());
             output = new DataOutputStream(connection.getOutputStream());
-            terminal.close();
+
+            Utilz.logIt(log, "connection between agents established successfully");
 
             //start consumming
             jobLoop();
+
+            Utilz.logIt(log, "no more job for agent-host | start terminating connection");
+            
+            //termination socket and server
+            terminal.close();
+            connection.close();
         } catch (IOException e) {
             // TODO: report error
         }
@@ -40,19 +59,21 @@ public class Agent extends Thread {
         while(working){
             Partition partition;
 			try {
-				partition = shared.getConsummable();
+                partition = shared.getConsummable();
 			} catch (InterruptedException e) {
                 // TODO: Report error
                 return;
             }
             if(partition == null){
-                System.out.println("null here");
+                Utilz.logIt(log, "[FATAL ERROR] partitin is null from buffer");
                 return;
             }
+            Utilz.logIt(log, "sending partition to other agent (partition index = "+partition.index+")");
             output.writeInt(partition.index);
             output.writeInt(partition.data.length);
             output.write(partition.data);
             working = input.readBoolean();
+            Utilz.logIt(log, "receive remaining job signal -> " + working);
         }
     }
 

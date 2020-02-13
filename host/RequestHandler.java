@@ -4,7 +4,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
+
+import fuzzy.Utilz;
 
 public class RequestHandler implements Runnable{
     private Server server;
@@ -19,20 +20,20 @@ public class RequestHandler implements Runnable{
         } catch (IOException e) {
             System.out.println("[ERROR][FetchHandler] IOExeption:" + e.getMessage());
         }
-        server.log.log(Level.CONFIG, "Request Handler running");
+        Utilz.logIt(server.log, "Request Handler running");
     }
 
     @Override
     public void run(){
         while(true){
-            server.log.log(Level.INFO, "[RequestHandler] wait on port " + requestPort);
+            Utilz.logIt(server.log, "[RequestHandler] wait on port " + requestPort);
             try {
                 Socket request = this.requestServerSocket.accept();
-                server.log.log(Level.INFO, "[RequestHandler] connection accepted");
+                Utilz.logIt(server.log, "[RequestHandler] connection accepted");
                 DataInputStream input = new DataInputStream(request.getInputStream());
                 server.onRequest(request, input.readInt());
             } catch (IOException e) {
-                server.log.log(Level.INFO, "[RequestHandler] failed on accept");
+                Utilz.logIt(server.log, "[RequestHandler] failed on accept");
             }
         }
     }
