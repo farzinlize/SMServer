@@ -1,5 +1,7 @@
 package client;
 
+import fuzzy.FuzzyException;
+
 public class Collector{
 
     private byte[] result;
@@ -29,8 +31,8 @@ public class Collector{
         return stillWork;
     }
 
-    public byte[] getResult() throws Exception {
-        if(holes != 0) throw new Exception("not ready");
+    public byte[] getResult() throws FuzzyException {
+        if(holes != 0) throw new FuzzyException("not ready");
         return result;
     }
 

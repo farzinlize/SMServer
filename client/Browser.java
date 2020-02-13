@@ -7,6 +7,7 @@ import client.database.SimpleDataTree;
 
 public class Browser implements Runnable{
 
+    public static final String APP_VERSION = "0.1";
     public static final int MAX_ACTIVE_REQUEST = 5;
 
     private DataTree tree;
@@ -19,27 +20,29 @@ public class Browser implements Runnable{
         input = new Scanner(System.in);
         requests = new Request[MAX_ACTIVE_REQUEST];
 
-        //TODO: inital data tree
+        //initial tree with simple tree that contain dummy files
         this.tree = new SimpleDataTree();
     }
 
     @Override
     public void run() {
+        System.out.println("Welcome to fuzzy | a special browser for (SM)Server");
         String command = "";
         while(true){
+            System.out.println("commends: (e)xit | (r)rquest | (f)etch | (a)ctiveCount");
             command = input.next();
-            if(command.equals("exit")){
+            if(command.equals("e")|| command.equals("exit")){
                 break;
             }
-            else if(command.equals("request")){
+            else if(command.equals("r") || command.equals("request")){
                 System.out.println("fileTag - ip - port (9876)");
                 initialRequest(input.nextInt());
             }
-            else if(command.equals("fetch")){
+            else if(command.equals("f") || command.equals("fetch")){
                 fetch();
             }
-            else if(command.equals("activeCount")){
-                System.out.println(activeRequests);
+            else if(command.equals("a") || command.equals("activeCount")){
+                System.out.println("active requset = " + activeRequests);
             }
             else{
                 System.out.println("unknown command: " + command);
@@ -61,6 +64,7 @@ public class Browser implements Runnable{
         requests[slot] = request;
         activeRequests++;
         request.start();
+        System.out.println("requset start running siccessfully");
     }
 
     private void fetch(){
@@ -68,6 +72,7 @@ public class Browser implements Runnable{
     }
 
     public synchronized void onRespond(int requestIndex, int dataID, byte[] data){
+        System.out.println("response received");
         this.tree.update(dataID, data);
         requests[requestIndex] = null;
         activeRequests--;
