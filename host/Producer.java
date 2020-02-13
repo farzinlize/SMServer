@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fuzzy.FuzzyException;
 import fuzzy.Utilz;
 import host.encryption.NoEncryption;
 
@@ -46,8 +47,10 @@ public class Producer extends Thread {
             try {
                 shared.putProduced(new Partition(partition.index, encrypted));
                 Utilz.logIt(log, "partition ("+partition.index+") successfully placed in shared memory");
-            } catch (Exception e) {
+            } catch (FuzzyException e) {
                 Utilz.logIt(log, "partition ("+partition.index+") data was bigger that block size in buffer", Level.WARNING);
+            } catch (InterruptedException e) {
+                Utilz.logIt(log, "[ERROR] intruppted!", Level.WARNING);
             }
         }
     }

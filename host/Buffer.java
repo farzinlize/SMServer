@@ -5,6 +5,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import fuzzy.FuzzyException;
+
 public class Buffer{
     
     public static final int MAX_TRY_COUNT = 5;
@@ -34,9 +36,9 @@ public class Buffer{
         consume = new Semaphore(0);
     }
 
-    public void putProduced(Partition partition) throws Exception {
+    public void putProduced(Partition partition) throws FuzzyException, InterruptedException {
         produce.acquire();
-        if(partition.data.length > blockSize) throw new Exception("data oversized fatal error");
+        if(partition.data.length > blockSize) throw new FuzzyException("data oversized fatal error");
         int current=0;
         while(current<blockCount){
             boolean moreTry = true;
