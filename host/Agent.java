@@ -33,9 +33,9 @@ public class Agent extends Thread {
 
     @Override
     public void run() {
-        Utilz.logIt(log, "Agent-host start running on port = ("+port+")");
         try {
             ServerSocket terminal = new ServerSocket(port);
+            Utilz.logIt(log, "Agent-host start running on port = ("+port+")");
             Socket connection = terminal.accept();
             input = new DataInputStream(connection.getInputStream());
             output = new DataOutputStream(connection.getOutputStream());

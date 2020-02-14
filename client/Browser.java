@@ -64,7 +64,7 @@ public class Browser implements Runnable{
         requests[slot] = request;
         activeRequests++;
         request.start();
-        System.out.println("requset start running siccessfully");
+        System.out.println("requset start running successfully");
     }
 
     private void fetch(){

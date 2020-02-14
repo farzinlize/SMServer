@@ -32,7 +32,7 @@ public class Schaduler extends Thread {
         log = Utilz.initialLogger("Schaduler#"+id);
 
         //inital resource manager
-        this.manager = new FixedResourceManager(1, 50, 20);
+        this.manager = new FixedResourceManager(5, 100, 20);
         this.distributor = new StaticDistributor(log, filePath, 
                 manager.getProducerCount(), manager.getBufferBlockSize());
         Utilz.logIt(log, "[Schaduler]["+id+"] initializing manager and distributor: FixedResourceManager & StaticDistributor");

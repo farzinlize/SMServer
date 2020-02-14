@@ -38,8 +38,8 @@ public class Request extends Thread {
             System.out.println("error creating or opening log file");
         }
 
-        Utilz.logIt(log, "initiate request with FixedResource manager with 1 consumers");
-        this.manager = new FixedResourceManager(1);
+        Utilz.logIt(log, "initiate request with FixedResource manager with 5 consumers");
+        this.manager = new FixedResourceManager(5);
 
         agents = new Agent[manager.getConsumerNumber()];
     }
@@ -74,9 +74,12 @@ public class Request extends Thread {
             for(int i=0;i<agents.length;i++){
                 int port = input.readInt();
                 agents[i] = new Agent(i, this, ip, port);
-                agents[i].start();
             }
             
+            for(Agent agent : agents){
+                agent.start();
+            }
+
             //end of conversation
             Utilz.logIt(log, "receive connection information for each agent and terminate current socket");
             socket.close();

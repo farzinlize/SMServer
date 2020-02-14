@@ -1,3 +1,4 @@
 host/files/*
 client/files/*
 *.log
+*.log.*
