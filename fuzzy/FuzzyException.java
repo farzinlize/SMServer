@@ -2,6 +2,8 @@ package fuzzy;
 
 public class FuzzyException extends Exception{
 
+    public int usefulInt;
+
     /**
      *  auto generated serialVersionUID
      */
@@ -9,6 +11,11 @@ public class FuzzyException extends Exception{
 
     public FuzzyException(String msg){
         super(msg);
+    }
+
+    public FuzzyException(String msg, int info){
+        super(msg);
+        this.usefulInt = info;
     }
 
 }
