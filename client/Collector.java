@@ -32,7 +32,7 @@ public class Collector{
     }
 
     public byte[] getResult() throws FuzzyException {
-        if(holes != 0) throw new FuzzyException("not ready");
+        if(holes != 0) throw new FuzzyException("not ready", holes);
         return result;
     }
 

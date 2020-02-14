@@ -32,8 +32,8 @@ public class Schaduler extends Thread {
         log = Utilz.initialLogger("Schaduler#"+id);
 
         //inital resource manager
-        this.manager = new FixedResourceManager(5, 50, 100);
-        this.distributor = new StaticDistributor(filePath, 
+        this.manager = new FixedResourceManager(1, 50, 20);
+        this.distributor = new StaticDistributor(log, filePath, 
                 manager.getProducerCount(), manager.getBufferBlockSize());
         Utilz.logIt(log, "[Schaduler]["+id+"] initializing manager and distributor: FixedResourceManager & StaticDistributor");
 
@@ -59,10 +59,7 @@ public class Schaduler extends Thread {
 
     @Override
     public void run() {
-        // start threads
-        for (int i = 0; i < agents.length; i++) {
-            agents[i].start();
-        }
+        // start threads (agents started before in initalAgents)
         for (int i = 0; i < producers.length; i++) {
             Producer newProducer = new Producer(i, this, shared);
             producers[i] = newProducer;
@@ -102,6 +99,7 @@ public class Schaduler extends Thread {
                 int port = 2500 + i + id*50;
                 output.writeInt(port);
                 Agent newAgent = new Agent(i ,port, shared);
+                newAgent.start();
                 agents[i] = newAgent;
             }
         } catch (IOException e) {

@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import client.encryption.NoEncryption;
@@ -39,19 +40,22 @@ public class Agent extends Thread {
     @Override
     public void run() {
         try {
-            Utilz.logIt(log, "start establishing agent-to-agent connection");
+            Utilz.logIt(log, "start establishing agent-to-agent connection - ip = ("
+                +serverIP+") and port = ("+port+")");
             Socket socket = new Socket(serverIP, port);
             input = new DataInputStream(socket.getInputStream());
             output = new DataOutputStream(socket.getOutputStream());
 
             //start decoding
+            Utilz.logIt(log, "Connection successfully established (start job loop)");
             jobLoop();
 
             //end of process
             socket.close();
             Utilz.logIt(log, "end of agent-client life | socket closed");
         } catch (IOException e) {
-            Utilz.logIt(log, "[ERROR] agent-to-agent socket issues a problem");
+            Utilz.logIt(log, "[ERROR] agent-to-agent socket issues a problem", Level.WARNING);
+            Utilz.logIt(log, "[EXCEPTION] message = " + e.getMessage(), Level.WARNING);
         }
     }
 
@@ -62,7 +66,8 @@ public class Agent extends Thread {
             int blockSize = input.readInt();
             Utilz.logIt(log, "start recieveing partition with index = "
                     +index+" and block size of:"+blockSize);
-            byte[] data = input.readNBytes(blockSize);
+            byte[] data = new byte[blockSize];
+            input.readFully(data, 0, data.length);
             byte[] decrypted = decoder.decode(data);
             stayAlive = master.place(index, decrypted);
             output.writeBoolean(stayAlive);

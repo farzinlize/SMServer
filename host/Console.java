@@ -2,6 +2,8 @@ package host;
 
 import java.util.Scanner;
 
+import fuzzy.ServerMode;
+
 public class Console implements Runnable{
 
     public static final String APP_VERSION = "0.1";
@@ -27,10 +29,12 @@ public class Console implements Runnable{
             System.out.println("commands: (e)xit | (s)erver");
             command = input.next();
             if(command.equals("e") || command.equals("exit")){
-                break;
+                input.close();
+                return;
             }
             else if(command.equals("s") || command.equals("server")){
-                startServer();
+                System.out.println("enter server mode -> 1:making log file | 0:running");
+                startServer(input.nextInt());
             }
             else{
                 System.out.println("unknown command: " + command);
@@ -38,12 +42,14 @@ public class Console implements Runnable{
         }
     }
 
-    private void startServer(){
+    private void startServer(int modeId){
         if(activeServers >= MAX_ACTIVE_SERVER){
             System.out.println("reachs maximum number of servers");
             return ;
         }
-        Server server = new Server(activeServers);
+        ServerMode mode = ServerMode.DEBUG;
+        if(modeId == 0) mode = ServerMode.LUANCH;
+        Server server = new Server(mode, activeServers);
         servers[activeServers++] = server;
         server.start();
     }

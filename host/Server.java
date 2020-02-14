@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+import fuzzy.ServerMode;
 import fuzzy.Utilz;
 import host.database.DataTree;
 import host.database.SimpleDataTree;
@@ -13,6 +14,7 @@ public class Server extends Thread {
     public static int MAX_ACTIVE_REQUEST = 2;
 
     public Logger log;
+    public ServerMode mode;
     public int id;
 
     private Thread fetchThread;
@@ -24,20 +26,23 @@ public class Server extends Thread {
 
     private Schaduler[] schadulers;
 
-    public Server(int id) {
+    public Server(ServerMode mode, int id) {
         this.id = id;
+        this.mode = mode;
         activeRequest = 0;
         schadulers = new Schaduler[MAX_ACTIVE_REQUEST];
 
         // start data tree
         this.tree = new SimpleDataTree();
 
-        try {
-            log = Utilz.initialLogger("server#" + id);
-        } catch (SecurityException | IOException e) {
-            System.out.println("problem creating or opening log file");
+        if(mode.equals(ServerMode.DEBUG)){
+            try {
+                log = Utilz.initialLogger("server#" + id);
+            } catch (SecurityException | IOException e) {
+                System.out.println("problem creating or opening log file");
+            }
+            Utilz.logIt(log, "Server running id:" + id);
         }
-        Utilz.logIt(log, "Server running id:" + id);
 
         //start listening on FETCH and REQUEST ports
         int fetchPort = 9875 + id*2;

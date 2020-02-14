@@ -41,7 +41,8 @@ public class Producer extends Thread {
                 Utilz.logIt(log, "no more job from boss (end of running)");
                 return;
             }
-            Utilz.logIt(log, "receive work and start working on it (partition idx = " + partition.index);
+            Utilz.logIt(log, "receive work and start working on it (partition idx = "
+                    +partition.index+") (partition size = "+partition.data.length+")");
             byte[] encrypted = code(partition.data);
             Utilz.logIt(log, "job done");
             try {

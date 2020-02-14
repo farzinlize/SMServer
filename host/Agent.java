@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fuzzy.Utilz;
@@ -32,7 +33,7 @@ public class Agent extends Thread {
 
     @Override
     public void run() {
-        Utilz.logIt(log, "Agent-host start running");
+        Utilz.logIt(log, "Agent-host start running on port = ("+port+")");
         try {
             ServerSocket terminal = new ServerSocket(port);
             Socket connection = terminal.accept();
@@ -50,7 +51,8 @@ public class Agent extends Thread {
             terminal.close();
             connection.close();
         } catch (IOException e) {
-            // TODO: report error
+            Utilz.logIt(log, "[ERROR] problem making connection", Level.WARNING);
+            Utilz.logIt(log, "[EXCEPTION] message = " + e.getMessage(), Level.WARNING);
         }
     }
 
@@ -68,7 +70,8 @@ public class Agent extends Thread {
                 Utilz.logIt(log, "[FATAL ERROR] partitin is null from buffer");
                 return;
             }
-            Utilz.logIt(log, "sending partition to other agent (partition index = "+partition.index+")");
+            Utilz.logIt(log, "sending partition to other agent (partition index = "
+                    +partition.index+") (partition size = "+partition.data.length+")");
             output.writeInt(partition.index);
             output.writeInt(partition.data.length);
             output.write(partition.data);

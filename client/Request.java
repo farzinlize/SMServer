@@ -38,8 +38,8 @@ public class Request extends Thread {
             System.out.println("error creating or opening log file");
         }
 
-        Utilz.logIt(log, "initiate request with FixedResource manager with 5 consumers");
-        this.manager = new FixedResourceManager(5);
+        Utilz.logIt(log, "initiate request with FixedResource manager with 1 consumers");
+        this.manager = new FixedResourceManager(1);
 
         agents = new Agent[manager.getConsumerNumber()];
     }
@@ -93,7 +93,7 @@ public class Request extends Thread {
         } catch (InterruptedException e) {
             //TODO: report error in log
         } catch (FuzzyException e){
-            Utilz.logIt(log, "collector reports there is still holes in result", Level.WARNING);
+            Utilz.logIt(log, "collector reports there is still holes in result (holes="+e.usefulInt+")", Level.WARNING);
         }
     }
 
