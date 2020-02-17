@@ -8,6 +8,9 @@ import java.net.Socket;
 import fuzzy.Utilz;
 
 public class RequestHandler implements Runnable{
+
+    private boolean alive;
+
     private Server server;
     private ServerSocket requestServerSocket;
     private int requestPort;
@@ -18,14 +21,15 @@ public class RequestHandler implements Runnable{
         try {
             requestServerSocket = new ServerSocket(requestPort);
         } catch (IOException e) {
-            System.out.println("[ERROR][FetchHandler] IOExeption:" + e.getMessage());
+            System.out.println("[ERROR][RequestHandler] IOExeption:" + e.getMessage());
         }
-        Utilz.logIt(server.log, "Request Handler running");
+        Utilz.logIt(server.log, "[RequestHandler] Request Handler running on port" + requestPort);
+        this.alive = true;
     }
 
     @Override
     public void run(){
-        while(true){
+        while(alive){
             Utilz.logIt(server.log, "[RequestHandler] wait on port " + requestPort);
             try {
                 Socket request = this.requestServerSocket.accept();
@@ -33,13 +37,19 @@ public class RequestHandler implements Runnable{
                 DataInputStream input = new DataInputStream(request.getInputStream());
                 server.onRequest(request, input.readInt());
             } catch (IOException e) {
-                Utilz.logIt(server.log, "[RequestHandler] failed on accept");
+                Utilz.logIt(server.log, "[RequestHandler] failed on accept or terminated");
             }
         }
+        Utilz.logIt(server.log, "[RequestHandler] terminated");
     }
 
     public int getPort(){
         return requestPort;
+    }
+
+    public void stop() throws IOException {
+        this.alive = false;
+        requestServerSocket.close();
     }
 
 }

@@ -1,5 +1,7 @@
 package fuzzy;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -39,6 +41,24 @@ public class Utilz {
         InetAddress localhost = InetAddress.getLocalHost(); 
         System.out.println("System IP Address : " + 
                       (localhost.getHostAddress()).trim()); 
+    }
+
+    public static void deleteLogs(){
+        FilenameFilter filter = new FilenameFilter(){
+            @Override
+            public boolean accept(File dir, String name) {
+                return (name.endsWith(".log"));
+            }
+        };
+        File dir = new File(System.getProperty("user.dir"));
+
+        String[] list = dir.list(filter);
+        File file;
+        if (list.length == 0) return;
+        for(int i=0;i<list.length;i++){
+            file = new File(System.getProperty("user.dir"), list[i]);
+            System.out.println(file + " deleted: " + file.delete());
+        }
     }
 
 }

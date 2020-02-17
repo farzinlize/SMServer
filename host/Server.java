@@ -35,7 +35,7 @@ public class Server extends Thread {
         // start data tree
         this.tree = new SimpleDataTree();
 
-        if(mode.equals(ServerMode.DEBUG)){
+        if (mode.equals(ServerMode.DEBUG)) {
             try {
                 log = Utilz.initialLogger("server#" + id);
             } catch (SecurityException | IOException e) {
@@ -44,21 +44,30 @@ public class Server extends Thread {
             Utilz.logIt(log, "Server running id:" + id);
         }
 
-        //start listening on FETCH and REQUEST ports
-        int fetchPort = 9875 + id*2;
-        int requestPort = 9876 + id*2;
+        // start listening on FETCH and REQUEST ports
+        int fetchPort = 9875 + id * 2;
+        int requestPort = 9876 + id * 2;
         fetchHandler = new FetchHandler(this, fetchPort);
         requestHandler = new RequestHandler(this, requestPort);
     }
 
     @Override
-    public void run(){
+    public void run() {
         requestThread = new Thread(requestHandler);
         fetchThread = new Thread(fetchHandler);
         fetchThread.start();
         Utilz.logIt(log, "Fetch handler started on " + fetchHandler.getPort());
         requestThread.start();
         Utilz.logIt(log, "Request handler started on " + requestHandler.getPort());
+
+        try {
+            fetchThread.join();
+            requestThread.join();
+        } catch (InterruptedException e) {
+            Utilz.logIt(log, "couldnt join fetch and request thread");
+        }
+
+        Utilz.logIt(log, "server terminated");
     }
 
     public void onRequest(Socket requestSocket, int requestedFile){
@@ -97,6 +106,15 @@ public class Server extends Thread {
         Utilz.logIt(log, "[Server] request done successfully with request id = " + requestId);
         schadulers[requestId] = null;
         activeRequest--;
+    }
+
+    public void onStop(){
+        try {
+            requestHandler.stop();
+            fetchHandler.stop();
+        } catch (IOException e) {
+            Utilz.logIt(log, "couldnt terminate request or fetch handler");
+        }
     }
 
 }
