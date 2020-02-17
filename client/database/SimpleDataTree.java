@@ -8,7 +8,7 @@ public class SimpleDataTree implements DataTree {
 
     @Override
     public void update(int dataTag, byte[] data) {
-        Path p = Path.of("/home/farzin/Documents/SMServer/client/files/dummy"+dataTag);
+        Path p = Path.of(System.getProperty("user.dir") + "/client/files/dummy" + dataTag);
         try {
             Files.write(p, data);
         } catch (IOException e) {

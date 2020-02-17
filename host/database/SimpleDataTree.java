@@ -1,7 +1,5 @@
 package host.database;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class SimpleDataTree implements DataTree {
@@ -26,19 +24,12 @@ public class SimpleDataTree implements DataTree {
      * Add Dummy path to database for test phase
      */
     public void addDummy() {
-        paths[0] = Path.of("/home/farzin/Documents/SMServer/host/files/dummy");
+        paths[0] = Path.of(System.getProperty("user.dir") + "/host/files/dummy");
     }
 
     public static void main(String[] args) {
-        Path p0 = Path.of("/home/farzin/Documents/SMServer/host/files/dummy");
-        //File folder = new File("/home/farzin/Documents/SMServer/host/files/dummy");
-        try {
-            byte[] data = Files.readAllBytes(p0);
-            System.out.println(data[5]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Working Directory = " +
+              System.getProperty("user.dir"));
 
     }
-
 }
